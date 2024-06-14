@@ -84,6 +84,9 @@ const LoginForm = () => {
                     color: "#00000",
                     fontSize: "0.9rem",
                   },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#fe5c00",
+                  },
                   "& .MuiInput-underline:before": {
                     borderBottomColor: "#fe5c00",
                   },
@@ -108,6 +111,9 @@ const LoginForm = () => {
                   "& .MuiInputLabel-root": {
                     color: "#00000",
                     fontSize: "0.9rem",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#fe5c00",
                   },
                   "& .MuiInput-underline:before": {
                     borderBottomColor: "#fe5c00",
