@@ -8,6 +8,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import GlobalHelmet from "./components/globalHelmet";
 import Login from "./components/login.jsx";
 import Properties from "./components/properties.jsx";
+import AddProperty from "./components/addProperty.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/livit" element={<LandingPage />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/properties" element={<Properties />}></Route>
+          <Route path="/properties-add" element={<AddProperty />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
