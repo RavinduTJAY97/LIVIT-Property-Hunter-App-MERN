@@ -17,7 +17,7 @@ const App = () => {
       <GlobalHelmet />
       <BrowserRouter>
         <Routes>
-          <Route path="/livit" element={<LandingPage />}></Route>
+          <Route path="/" element={<LandingPage />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/properties" element={<Properties />}></Route>
           <Route path="/properties-add" element={<AddProperty />}></Route>
