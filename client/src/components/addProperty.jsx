@@ -42,6 +42,7 @@ const AddProperty = () => {
     garage: "",
     description: "",
     price: "",
+    location: "",
   });
   const [error, setError] = React.useState("");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -75,6 +76,9 @@ const AddProperty = () => {
         break;
       case !propertyType:
         errors.push("Property Type is required");
+        break;
+      case !formValues.location:
+        errors.push("Location is required");
         break;
       case !formValues.bathrooms:
         errors.push("Bathrooms is required");
@@ -139,10 +143,16 @@ const AddProperty = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <img
+          src="assets/imgs/livit_logo.png"
+          alt="Logo"
+          style={{ maxHeight: "100px" }}
+        />
+      </Box>
       <Container component="main">
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -190,6 +200,19 @@ const AddProperty = () => {
                     <MenuItem value="CONDO">Condo</MenuItem>
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  id="location"
+                  label="Location"
+                  name="location"
+                  margin="normal"
+                  value={formValues.location}
+                  onChange={handleChange}
+                  sx={{ width: "50%" }}
+                />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
@@ -283,7 +306,7 @@ const AddProperty = () => {
                 variant="contained"
                 color="primary"
                 sx={{
-                  mt: 3,
+                  mt: 10,
                   mb: 2,
                   borderRadius: "50px",
                   width: "15%",
