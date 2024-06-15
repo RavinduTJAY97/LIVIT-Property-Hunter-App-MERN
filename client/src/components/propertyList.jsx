@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -9,72 +9,44 @@ import {
   Container,
   Box,
 } from "@mui/material";
-
-/* Sample products  */
-
-const sampleProducts = [
-  {
-    id: 1,
-    name: "Apartment for sale in Brisbane",
-    subheading: "3 Bedrooms | 2 Bathrooms | 1 Car Parking Area ",
-    price: "AUD 415,000",
-    image: "assets/imgs/ap1_1.jpg",
-  },
-  {
-    id: 2,
-    name: "Apartment for sale in Sydney",
-    subheading: "3 Bedrooms | 2 Bathrooms | 1 Car Parking Area ",
-    price: "AUD 425,000",
-    image: "assets/imgs/ap1_2.jpg",
-  },
-  {
-    id: 3,
-    name: "Apartment for sale in Melbourne",
-    subheading: "3 Bedrooms | 2 Bathrooms | 1 Car Parking Area ",
-    price: "AUD 435,000",
-    image: "assets/imgs/ap1_3.jpg",
-  },
-  {
-    id: 4,
-    name: "Apartment for sale in Perth",
-    subheading: "3 Bedrooms | 2 Bathrooms | 1 Car Parking Area ",
-    price: "AUD 445,000",
-    image: "assets/imgs/ap1_4.jpg",
-  },
-  {
-    id: 5,
-    name: "Apartment for sale in Perth",
-    subheading: "3 Bedrooms | 2 Bathrooms | 1 Car Parking Area ",
-    price: "AUD 455,000",
-    image: "assets/imgs/ap1_5.jpg",
-  },
-];
+import axios from "axios";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import BedIcon from "@mui/icons-material/Bed";
+import BathtubIcon from "@mui/icons-material/Bathtub";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 const ProductsList = () => {
+  const [properties, setProperties] = useState([]);
   const [page, setPage] = useState(1);
-  /* setting a constant for products per page  */
-  const productsPerPage = 4;
-  /* pagination handle  */
+  const [totalPages, setTotalPages] = useState(1);
+
+  const propertiesPerPage = 4;
+
+  /* Fetching property data based on page */
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:8080/property?page=${page}&limit=${propertiesPerPage}`
+      )
+      .then((response) => {
+        setProperties(response.data.properties || []);
+        setTotalPages(Math.ceil(response.data.total / propertiesPerPage));
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [page]);
+
   const handleChange = (event, value) => {
     setPage(value);
   };
-
-  /* start index depending on page  */
-
-  const startIndex = (page - 1) * productsPerPage;
-
-  /* selected products depending on page   */
-
-  const selectedProducts = sampleProducts.slice(
-    startIndex,
-    startIndex + productsPerPage
-  );
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US").format(price);
+  };
 
   return (
     <Container>
       <Grid container spacing={3} direction="column">
-        {selectedProducts.map((product) => (
-          <Grid item xs={12} key={product.id}>
+        {properties.map((property) => (
+          <Grid item xs={12} key={property._id}>
             {/* Add product card  */}
             <Card
               sx={{
@@ -88,37 +60,72 @@ const ProductsList = () => {
                   "0px 2px 1px -1px #fe5c00, 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
               }}
             >
-              {/* Add product image  */}
+              {/* Add property image  */}
               <CardMedia
                 component="img"
                 sx={{ width: 150, height: 150 }}
-                image={product.image}
-                alt={product.name}
+                image={"assets/imgs/ap1_5.jpg"}
+                alt={property.title}
               />
-              {/* /Add product image */}
+              {/* /Add property image */}
 
-              {/* Add product details  */}
+              {/* Add property details  */}
               <CardContent sx={{ flex: "1 0 auto" }}>
                 <Typography variant="h6" component="div">
-                  {product.name}
+                  {property.title}
                 </Typography>
+
                 <Typography variant="subtitle2" color="text.secondary">
-                  {product.subheading}
+                  {property.propertyType}
+                </Typography>
+
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  mt={2}
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <BedIcon sx={{ fontSize: 16, mr: 0.5 }} />{" "}
+                  {property.numberOfBedrooms} |
+                  <BathtubIcon sx={{ fontSize: 16, mr: 0.5 }} />{" "}
+                  {property.numberOfBathrooms} |
+                  <DirectionsCarIcon sx={{ fontSize: 16, mr: 0.5 }} />{" "}
+                  {property.numberOfParkings}
                 </Typography>
               </CardContent>
-              {/* /Add product details  */}
+              {/* /Add property details  */}
 
-              {/* Add product price  */}
+              {/* Add property price  */}
               <Box sx={{ position: "absolute", top: 75, right: 16 }}>
                 <Typography
                   variant="h6"
                   gutterBottom
                   style={{ color: "#fe5c00" }}
                 >
-                  {product.price}
+                  AUD {formatPrice(property.price)}
                 </Typography>
               </Box>
-              {/* /Add product price  */}
+              {/* property location  */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <LocationOnIcon
+                  sx={{ color: "#686D76", fontSize: 16, mr: 0.5 }}
+                />
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  style={{ color: "#686D76", fontSize: 12 }}
+                >
+                  {property.location}
+                </Typography>
+              </Box>
             </Card>
           </Grid>
         ))}
@@ -126,7 +133,7 @@ const ProductsList = () => {
 
       {/* Pagination  */}
       <Pagination
-        count={Math.ceil(sampleProducts.length / productsPerPage)}
+        count={totalPages}
         page={page}
         onChange={handleChange}
         color="primary"

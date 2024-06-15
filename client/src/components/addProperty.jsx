@@ -15,6 +15,7 @@ import {
   Alert,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -37,15 +38,16 @@ const AddProperty = () => {
   const [status, setStatus] = React.useState("");
   const [formValues, setFormValues] = React.useState({
     title: "",
-    bathrooms: "",
-    bedrooms: "",
-    garage: "",
+    numberOfBathrooms: "",
+    numberOfBedrooms: "",
+    numberOfParkings: "",
     description: "",
     price: "",
     location: "",
   });
   const [error, setError] = React.useState("");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const navigate = require("react-router-dom").useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,14 +82,14 @@ const AddProperty = () => {
       case !formValues.location:
         errors.push("Location is required");
         break;
-      case !formValues.bathrooms:
+      case !formValues.numberOfBathrooms:
         errors.push("Bathrooms is required");
         break;
-      case !formValues.bedrooms:
+      case !formValues.numberOfBedrooms:
         errors.push("Bedrooms is required");
         break;
-      case !formValues.garage:
-        errors.push("Garage is required");
+      case !formValues.numberOfParkings:
+        errors.push("Parking is required");
         break;
       case !formValues.description:
         errors.push("Description is required");
@@ -107,7 +109,6 @@ const AddProperty = () => {
       setOpenSnackbar(true);
       return;
     }
-
     const data = {
       ...formValues,
       propertyType,
@@ -115,22 +116,13 @@ const AddProperty = () => {
     };
 
     try {
+      await axios.post("http://localhost:8080/property", data);
+      setOpenSnackbar(true);
+      navigate("/properties");
       setError("Property added successfully!");
-      const response = await fetch("https://api.example.com/add-property", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        setError("Property added successfully!");
-      } else {
-        setError("Failed to add property");
-      }
     } catch (error) {
       setError("An error occurred");
+      setOpenSnackbar(true);
     }
 
     setOpenSnackbar(true);
@@ -195,9 +187,9 @@ const AddProperty = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="HOUSE">House</MenuItem>
-                    <MenuItem value="APARTMENT">Apartment</MenuItem>
-                    <MenuItem value="CONDO">Condo</MenuItem>
+                    <MenuItem value="House">House</MenuItem>
+                    <MenuItem value="Apartment">Apartment</MenuItem>
+                    <MenuItem value="Condo">Condo</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -218,12 +210,12 @@ const AddProperty = () => {
                 <TextField
                   variant="standard"
                   fullWidth
-                  id="bathrooms"
+                  id="numberOfBathrooms"
                   label="Bathrooms"
-                  name="bathrooms"
+                  name="numberOfBathrooms"
                   type="number"
                   margin="normal"
-                  value={formValues.bathrooms}
+                  value={formValues.numberOfBathrooms}
                   onChange={handleChange}
                 />
               </Grid>
@@ -231,12 +223,12 @@ const AddProperty = () => {
                 <TextField
                   variant="standard"
                   fullWidth
-                  id="bedrooms"
+                  id="numberOfBedrooms"
                   label="Bedrooms"
-                  name="bedrooms"
+                  name="numberOfBedrooms"
                   type="number"
                   margin="normal"
-                  value={formValues.bedrooms}
+                  value={formValues.numberOfBedrooms}
                   onChange={handleChange}
                 />
               </Grid>
@@ -244,12 +236,12 @@ const AddProperty = () => {
                 <TextField
                   variant="standard"
                   fullWidth
-                  id="garage"
-                  label="Garage"
-                  name="garage"
+                  id="numberOfParkings"
+                  label="Parkings"
+                  name="numberOfParkings"
                   type="number"
                   margin="normal"
-                  value={formValues.garage}
+                  value={formValues.numberOfParkings}
                   onChange={handleChange}
                 />
               </Grid>
