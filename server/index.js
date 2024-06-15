@@ -4,9 +4,11 @@ const app = express();
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const propertyRoutes = require("./routes/propertyRoutes");
+const cors = require("cors");
 
 app.use(bodyParser.json());
-
+app.use(cors());
+app.use(express.json());
 // Connect to MongoDB
 connectDB(process.env.MONGODB_CONNECTION);
 
