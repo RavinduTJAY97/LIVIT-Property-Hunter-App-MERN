@@ -118,8 +118,11 @@ const AddProperty = () => {
     try {
       await axios.post("http://localhost:8080/property", data);
       setOpenSnackbar(true);
-      navigate("/properties");
+      // navigate("/properties");
       setError("Property added successfully!");
+      setTimeout(() => {
+        navigate("/properties");
+      }, 1000);
     } catch (error) {
       setError("An error occurred");
       setOpenSnackbar(true);
@@ -303,7 +306,7 @@ const AddProperty = () => {
                   borderRadius: "50px",
                   width: "15%",
                   "&:hover": {
-                    backgroundColor: "#e54b00",
+                    backgroundColor: "#C7C8CC",
                   },
                 }}
               >
