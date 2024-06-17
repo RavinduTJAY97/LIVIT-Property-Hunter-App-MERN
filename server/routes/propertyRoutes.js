@@ -25,15 +25,31 @@ router.post("/", async (req, res) => {
 // get all properties
 router.get("/", async (req, res) => {
   try {
-    const { page = 1, limit = 4 } = req.query;
+    const { page = 1, limit = 4, status, propertyType, search } = req.query;
     const skip = (page - 1) * limit;
+    let query = {};
+
+    if (status) {
+      query.status = status;
+    }
+
+    if (propertyType) {
+      query.propertyType = propertyType;
+    }
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } },
+      ];
+    }
 
     const [properties, total] = await Promise.all([
-      Property.find().skip(skip).limit(Number(limit)),
-      Property.countDocuments(),
+      Property.find(query).skip(skip).limit(limit),
+      Property.countDocuments(query),
     ]);
 
-    res.send({ properties: properties, total });
+    res.send({ properties, total });
   } catch (error) {
     console.error("Error fetching properties:", error);
     res.status(500).send({ error: "Error fetching properties" });
