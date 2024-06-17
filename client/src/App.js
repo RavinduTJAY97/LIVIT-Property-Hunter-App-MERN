@@ -9,20 +9,24 @@ import GlobalHelmet from "./components/globalHelmet";
 import Login from "./components/login.jsx";
 import Properties from "./components/properties.jsx";
 import AddProperty from "./components/addProperty.jsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import NotFoundPage from "./components/notFoundPage";
+import { HelmetProvider } from "react-helmet-async";
 
 const App = () => {
   return (
     <div className="App">
-      <GlobalHelmet />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/properties" element={<Properties />}></Route>
-          <Route path="/properties-add" element={<AddProperty />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <HelmetProvider>
+        <GlobalHelmet />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/properties" element={<Properties />}></Route>
+            <Route path="/properties-add" element={<AddProperty />}></Route>
+            <Route path="*" element={<NotFoundPage />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </HelmetProvider>
     </div>
   );
 };
