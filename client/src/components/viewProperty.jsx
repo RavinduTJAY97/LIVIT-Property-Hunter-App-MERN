@@ -6,6 +6,7 @@ import {
   Typography,
   Grid,
   Box,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -14,10 +15,12 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import ImageSlider from "./imageSlider";
+import { useNavigate } from "react-router-dom";
 
 const PropertyCard = () => {
   const [property, setProperty] = useState({});
   let { propertyId } = require("react-router-dom").useParams();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProperties = async () => {
       console.log(propertyId);
@@ -36,6 +39,10 @@ const PropertyCard = () => {
   }, []);
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
+  };
+
+  const handleEdit = () => {
+    navigate(`/properties-add/${propertyId}`);
   };
 
   return (
@@ -106,18 +113,23 @@ const PropertyCard = () => {
               {property.description}
             </Typography>
             <Typography variant="body1" component="div" mt={2} mb={2}>
-              <LocalPhoneIcon sx={{ mr: 0.5, color: "#686D76" }} /> +094 71 456
-              789
+              <LocalPhoneIcon sx={{ mr: 0.5, color: "#686D76" }} />
+              {property.contact}
             </Typography>
 
-            {/* <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <Button variant="outlined" color="success" sx={{ mr: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+              <Button
+                variant="outlined"
+                color="success"
+                sx={{ mr: 1 }}
+                onClick={handleEdit}
+              >
                 Edit
               </Button>
               <Button variant="outlined" color="error" sx={{ mr: 1 }}>
                 Delete
               </Button>
-            </Box> */}
+            </Box>
           </CardContent>
         </Card>
       </Container>
