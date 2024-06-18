@@ -8,6 +8,7 @@ const propertySchema = new mongoose.Schema({
   numberOfBedrooms: { type: Number, required: true },
   numberOfParkings: { type: Number, required: true },
   description: { type: String, required: true },
+  contact: { type: String, required: true },
   propertyType: { type: String, required: true },
   status: { type: String, required: true },
   mainImageUrl: { type: String },
