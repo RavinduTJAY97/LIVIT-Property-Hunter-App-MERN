@@ -56,4 +56,18 @@ router.get("/", async (req, res) => {
   }
 });
 
+// get property by id
+router.get("/:id", async (req, res) => {
+  try {
+    const property = await Property.findById(req.params.id);
+    if (!property) {
+      return res.status(404).send({ error: "Property not found" });
+    }
+    res.send(property);
+  } catch (error) {
+    console.error("Error fetching property:", error);
+    res.status(500).send({ error: "Error fetching property" });
+  }
+});
+
 module.exports = router;
