@@ -3,7 +3,6 @@ import React, { useState } from "react";
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Array of images directly within the component
   const images = [
     "http://localhost:3000/assets/imgs/ap1_1.jpg",
     "http://localhost:3000/assets/imgs/ap1_2.jpg",

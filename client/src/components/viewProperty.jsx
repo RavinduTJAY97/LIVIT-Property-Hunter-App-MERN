@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useParams } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -7,6 +7,8 @@ import {
   Grid,
   Box,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -15,19 +17,26 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import ImageSlider from "./imageSlider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const PropertyCard = () => {
   const [property, setProperty] = useState({});
-  let { propertyId } = require("react-router-dom").useParams();
+  const { propertyId } = useParams();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchProperties = async () => {
-      console.log(propertyId);
       try {
         const response = await axios.get(
-          `http://localhost:8080/property/${propertyId}`,
-          {}
+          `http://localhost:8080/property/${propertyId}`
         );
         setProperty(response.data || {});
       } catch (error) {
@@ -36,13 +45,42 @@ const PropertyCard = () => {
     };
 
     fetchProperties();
-  }, []);
+  }, [propertyId]);
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
   const handleEdit = () => {
     navigate(`/properties-add/${propertyId}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/property/${propertyId}`);
+      handleClose();
+      setOpenSnackbar(true);
+      setError("Property deleted successfully!");
+      setTimeout(() => {
+        navigate("/properties");
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting property:", error);
+      setOpenSnackbar(true);
+      setError("Error deleting property!");
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -126,11 +164,51 @@ const PropertyCard = () => {
               >
                 Edit
               </Button>
-              <Button variant="outlined" color="error" sx={{ mr: 1 }}>
+              <Button
+                variant="outlined"
+                color="error"
+                sx={{ mr: 1 }}
+                onClick={handleClickOpen}
+              >
                 Delete
               </Button>
             </Box>
           </CardContent>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure you want to delete this property?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description"></DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>No</Button>
+              <Button onClick={handleDelete} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={8000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity={error.includes("successfully") ? "success" : "error"}
+            >
+              {error}
+            </Alert>
+          </Snackbar>
         </Card>
       </Container>
     </div>

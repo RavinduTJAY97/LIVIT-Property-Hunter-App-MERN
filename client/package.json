@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-swipeable-views-utils": "^0.14.0",
     "styled-components": "^6.1.11",
+    "sweetalert": "^2.1.2",
     "swiper": "^11.1.4",
     "web-vitals": "^2.1.4"
   },
