@@ -5,7 +5,6 @@ const Property = require("../database/models/property");
 // add a property
 router.post("/", async (req, res) => {
   try {
-    console.log("request", req.body);
     const property = new Property({
       ...req.body, // Destructure all fields from req.body
     });
@@ -67,6 +66,22 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching property:", error);
     res.status(500).send({ error: "Error fetching property" });
+  }
+});
+
+// update property
+router.put("/:id", async (req, res) => {
+  try {
+    const property = await Property.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!property) {
+      return res.status(404).send({ error: "Property not found" });
+    }
+    res.send(property);
+  } catch (error) {
+    console.error("Error updating property:", error);
+    res.status(500).send({ error: "Error updating property" });
   }
 });
 
