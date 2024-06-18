@@ -13,6 +13,7 @@ const propertySchema = new mongoose.Schema({
   status: { type: String, required: true },
   mainImageUrl: { type: String },
   imageUrls: { type: [String] },
+  createdAt: { type: Date, default: Date.now },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 

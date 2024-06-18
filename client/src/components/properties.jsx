@@ -3,6 +3,9 @@ import FilterPanel from "./filterPanel";
 import PropertyList from "./propertyList";
 import { Grid, Box } from "@mui/material";
 import EventEmitter from "eventemitter3";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 
 const emitter = new EventEmitter();
 
@@ -10,6 +13,7 @@ const Properties = () => {
   const [propertyType, setPropertyType] = useState("");
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handlePropertyTypeChange = (type) => {
@@ -35,6 +39,15 @@ const Properties = () => {
 
   return (
     <div>
+      <Box mr={4} mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Fab
+          aria-label="add"
+          sx={{ background: "#fe5c00", color: "white" }}
+          onClick={() => navigate("/properties-add")}
+        >
+          <AddIcon />
+        </Fab>
+      </Box>
       <Box sx={{ display: "flex", width: "100%" }}>
         <Grid container spacing={2} padding={5}>
           <Grid item xs={3}>

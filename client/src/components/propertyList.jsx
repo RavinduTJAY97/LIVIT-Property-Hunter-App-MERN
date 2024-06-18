@@ -85,7 +85,7 @@ const PropertyList = ({ propertyType, status, search }) => {
                 <CardMedia
                   component="img"
                   sx={{ width: 150, height: 150 }}
-                  image={"assets/imgs/ap1_5.jpg"}
+                  image={"assets/imgs/ap1_1.jpg"}
                   alt={property.title}
                 />
                 <CardContent sx={{ flex: "1 0 auto" }}>
@@ -154,6 +154,9 @@ const PropertyList = ({ propertyType, status, search }) => {
             "&.Mui-selected": {
               color: "#fff",
               backgroundColor: "#fe5c00",
+              "&:hover": {
+                backgroundColor: "gray", // Ensure it stays gray when hovered
+              },
             },
           },
         }}
