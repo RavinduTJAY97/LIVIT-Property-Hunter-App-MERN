@@ -10,6 +10,8 @@ import Login from "./components/login.jsx";
 import Properties from "./components/properties.jsx";
 import AddProperty from "./components/addProperty.jsx";
 import NotFoundPage from "./components/notFoundPage";
+import PropertyView from "./components/viewProperty";
+import ImageSlider from "./components/imageSlider";
 import { HelmetProvider } from "react-helmet-async";
 
 const App = () => {
@@ -23,6 +25,12 @@ const App = () => {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/properties" element={<Properties />}></Route>
             <Route path="/properties-add" element={<AddProperty />}></Route>
+            <Route path="/images" element={<ImageSlider />}></Route>
+            <Route
+              path="/properties-view/:propertyId"
+              element={<PropertyView />}
+            ></Route>
+            {/* not found */}
             <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>
         </BrowserRouter>
