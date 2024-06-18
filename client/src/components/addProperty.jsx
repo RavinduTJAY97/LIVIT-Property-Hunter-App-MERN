@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   TextField,
   Button,
@@ -36,12 +36,14 @@ const theme = createTheme({
 const AddProperty = () => {
   const [propertyType, setPropertyType] = React.useState("");
   const [status, setStatus] = React.useState("");
+  let { propertyId } = require("react-router-dom").useParams();
   const [formValues, setFormValues] = React.useState({
     title: "",
     numberOfBathrooms: "",
     numberOfBedrooms: "",
     numberOfParkings: "",
     description: "",
+    contact: "",
     price: "",
     location: "",
   });
@@ -66,6 +68,26 @@ const AddProperty = () => {
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      if (propertyId) {
+        console.log(propertyId);
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/property/${propertyId}`
+          );
+          setFormValues(response.data || {});
+          setPropertyType(response.data.propertyType);
+          setStatus(response.data.status);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchProperties();
+  }, [propertyId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -115,19 +137,33 @@ const AddProperty = () => {
       status,
     };
 
-    try {
-      await axios.post("http://localhost:8080/property", data);
-      setOpenSnackbar(true);
-      // navigate("/properties");
-      setError("Property added successfully!");
-      setTimeout(() => {
-        navigate("/properties");
-      }, 1000);
-    } catch (error) {
-      setError("An error occurred");
+    if (propertyId) {
+      try {
+        await axios.put(`http://localhost:8080/property/${propertyId}`, data);
+        setOpenSnackbar(true);
+        setError("Property updated successfully!");
+        setTimeout(() => {
+          navigate("/properties");
+        }, 1000);
+      } catch (error) {
+        setError("An error occurred");
+        setOpenSnackbar(true);
+      }
+    } else {
+      try {
+        await axios.post("http://localhost:8080/property", data);
+        setOpenSnackbar(true);
+        setError("Property added successfully!");
+        setTimeout(() => {
+          navigate("/properties");
+        }, 1000);
+      } catch (error) {
+        setError("An error occurred");
+        setOpenSnackbar(true);
+      }
+
       setOpenSnackbar(true);
     }
-
     setOpenSnackbar(true);
   };
 
@@ -140,7 +176,7 @@ const AddProperty = () => {
       <CssBaseline />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <img
-          src="assets/imgs/livit_logo.png"
+          src="http://localhost:8080/assets/imgs/livit_logo.png"
           alt="Logo"
           style={{ maxHeight: "100px" }}
         />
@@ -251,6 +287,19 @@ const AddProperty = () => {
               <Grid item xs={12}>
                 <TextField
                   variant="standard"
+                  width
+                  id="contact"
+                  label="Contact"
+                  name="contact"
+                  margin="normal"
+                  value={formValues.contact}
+                  onChange={handleChange}
+                  sx={{ width: "50%" }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="standard"
                   fullWidth
                   id="description"
                   label="Description"
@@ -310,7 +359,7 @@ const AddProperty = () => {
                   },
                 }}
               >
-                Add
+                {propertyId ? "Update" : "Add"}
               </Button>
             </Box>
           </Box>
