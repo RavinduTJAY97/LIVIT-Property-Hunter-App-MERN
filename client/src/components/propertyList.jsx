@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useNavigate } from "react";
 import {
   Card,
   CardMedia,
@@ -20,6 +20,8 @@ const PropertyList = ({ propertyType, status, search }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const propertiesPerPage = 4;
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const navigate = require("react-router-dom").useNavigate();
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -50,6 +52,10 @@ const PropertyList = ({ propertyType, status, search }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
+  const handlePropertyClick = (propertyId) => {
+    setSelectedProperty(propertyId === selectedProperty ? null : propertyId);
+    navigate(`/properties-view/${propertyId}`);
+  };
 
   return (
     <Container>
@@ -64,6 +70,7 @@ const PropertyList = ({ propertyType, status, search }) => {
           properties.map((property) => (
             <Grid item xs={12} key={property._id}>
               <Card
+                onClick={() => handlePropertyClick(property._id)}
                 sx={{
                   display: "flex",
                   flexDirection: "row",
