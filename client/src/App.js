@@ -24,7 +24,10 @@ const App = () => {
             <Route path="/" element={<LandingPage />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/properties" element={<Properties />}></Route>
-            <Route path="/properties-add" element={<AddProperty />}></Route>
+            <Route
+              path="/properties-add/:propertyId?"
+              element={<AddProperty />}
+            ></Route>
             <Route path="/images" element={<ImageSlider />}></Route>
             <Route
               path="/properties-view/:propertyId"
