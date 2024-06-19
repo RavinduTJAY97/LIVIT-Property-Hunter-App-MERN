@@ -21,7 +21,6 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = require("react-router-dom").useNavigate();
-  const [message, setMessage] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [error, setError] = useState({
     email: "",
