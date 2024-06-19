@@ -6,12 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "google-fonts";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import GlobalHelmet from "./components/globalHelmet";
-import Login from "./components/login.jsx";
+import SignIn from "./components/login.jsx";
 import Properties from "./components/properties.jsx";
 import AddProperty from "./components/addProperty.jsx";
 import NotFoundPage from "./components/notFoundPage";
 import PropertyView from "./components/viewProperty";
 import ImageSlider from "./components/imageSlider";
+import SignUp from "./components/signup";
 import { HelmetProvider } from "react-helmet-async";
 
 const App = () => {
@@ -22,7 +23,8 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="/sign-in" element={<SignIn />}></Route>
+            <Route path="/sign-up" element={<SignUp />}></Route>
             <Route path="/properties" element={<Properties />}></Route>
             <Route
               path="/properties-add/:propertyId?"
