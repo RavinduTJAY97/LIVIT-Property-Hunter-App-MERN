@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const propertyRoutes = require("./routes/propertyRoutes");
+const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 
 app.use(bodyParser.json());
@@ -20,3 +21,4 @@ app.listen(port, function () {
 
 // property routes
 app.use("/property", propertyRoutes);
+app.use("/user", userRoutes);
