@@ -155,7 +155,7 @@ const PropertyList = ({ propertyType, status, search }) => {
               color: "#fff",
               backgroundColor: "#fe5c00",
               "&:hover": {
-                backgroundColor: "gray", // Ensure it stays gray when hovered
+                backgroundColor: "gray",
               },
             },
           },
