@@ -37,7 +37,7 @@ export default function navigationBar() {
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <a className="btn-getstarted" href="/login">
+          <a className="btn-getstarted" href="/sign-in">
             Properties
           </a>
         </div>
