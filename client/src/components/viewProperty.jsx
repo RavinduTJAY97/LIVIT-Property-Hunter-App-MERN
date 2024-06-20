@@ -23,6 +23,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+const util = require("../util");
 
 const PropertyCard = () => {
   const [property, setProperty] = useState({});
@@ -31,8 +32,11 @@ const PropertyCard = () => {
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
+    const role = util.checkUserRole();
+    setUserRole(role);
     const fetchProperties = async () => {
       try {
         const response = await axios.get(
@@ -155,24 +159,26 @@ const PropertyCard = () => {
               {property.contact}
             </Typography>
 
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <Button
-                variant="outlined"
-                color="success"
-                sx={{ mr: 1 }}
-                onClick={handleEdit}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ mr: 1 }}
-                onClick={handleClickOpen}
-              >
-                Delete
-              </Button>
-            </Box>
+            {userRole === "admin" && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{ mr: 1 }}
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ mr: 1 }}
+                  onClick={handleClickOpen}
+                >
+                  Delete
+                </Button>
+              </Box>
+            )}
           </CardContent>
           <Dialog
             open={open}
