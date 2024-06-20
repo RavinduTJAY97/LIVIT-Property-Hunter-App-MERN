@@ -9,15 +9,57 @@ import {
   Typography,
   Link,
 } from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState([{ email: "", password: "" }]);
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    const errors = {};
+
+    // Client-side validation
+    if (!email) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "Email is invalid";
+    }
+    if (!password) {
+      errors.password = "Password is required";
+    }
+    setErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      try {
+        const response = await axios.post("http://localhost:8080/auth/login", {
+          email,
+          password,
+        });
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        navigate("/properties");
+      } catch (error) {
+        if (error.response) {
+          if (error.response.data.error === "Invalid email") {
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              email: "Invalid email",
+            }));
+          } else if (error.response.data.error === "Credentials not match") {
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              password: "Credentials not match",
+            }));
+          }
+        } else {
+          console.error("Error fetching data:", error);
+        }
+      }
+    }
   };
 
   return (
@@ -72,13 +114,12 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit}>
               <TextField
                 label="Email"
-                type="email"
+                type="text"
                 variant="standard"
                 fullWidth
                 margin="normal"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 sx={{
                   "& .MuiInputLabel-root": {
                     color: "#00000",
@@ -98,6 +139,16 @@ const LoginForm = () => {
                   },
                 }}
               />
+              {errors.email && (
+                <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  style={{ color: "red" }}
+                >
+                  {errors.email}
+                </Typography>
+              )}
               <TextField
                 label="Password"
                 type="password"
@@ -106,7 +157,6 @@ const LoginForm = () => {
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 sx={{
                   "& .MuiInputLabel-root": {
                     color: "#00000",
@@ -126,6 +176,16 @@ const LoginForm = () => {
                   },
                 }}
               />
+              {errors.password && (
+                <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  style={{ color: "red" }}
+                >
+                  {errors.password}
+                </Typography>
+              )}
               <Box mt={5} ml={2}>
                 <Button
                   type="submit"
@@ -151,7 +211,7 @@ const LoginForm = () => {
               >
                 <Typography mt={1} variant="subtitle1" gutterBottom>
                   <Link
-                    href="#"
+                    href="/sign-up"
                     underline="hover"
                     sx={{ color: "#9aa6b0", fontSize: "0.9rem" }}
                   >
