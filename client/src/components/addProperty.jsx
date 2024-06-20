@@ -74,9 +74,9 @@ const AddProperty = () => {
   useEffect(() => {
     const role = util.checkUserRole();
     setUserRole(role);
-    // if (role !== "admin") {
-    //   navigate("/properties");
-    // }
+    if (role !== "admin") {
+      navigate("/properties");
+    }
 
     const fetchProperties = async () => {
       if (propertyId) {

@@ -6,13 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "google-fonts";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import GlobalHelmet from "./components/globalHelmet";
-import SignIn from "./components/Auth/login.jsx";
+import SignIn from "./components/login.jsx";
 import Properties from "./components/properties.jsx";
 import AddProperty from "./components/addProperty.jsx";
 import NotFoundPage from "./components/notFoundPage";
 import PropertyView from "./components/viewProperty";
-import SignUp from "./components/Auth/signup.jsx";
-import ProtectedRoutes from "./components/Auth/protectedRoutes.jsx";
+import SignUp from "./components/signup";
+import ProtectedRoutes from "./components/protectedRoutes";
 import { HelmetProvider } from "react-helmet-async";
 
 const App = () => {
@@ -31,6 +31,7 @@ const App = () => {
 
             {/* not found */}
             <Route path="*" element={<NotFoundPage />}></Route>
+            {/* auth protected */}
             <Route element={<ProtectedRoutes />}>
               {/* properties */}
               <Route path="/properties" element={<Properties />}></Route>
