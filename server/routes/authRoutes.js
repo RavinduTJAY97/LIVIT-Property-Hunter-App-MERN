@@ -9,13 +9,13 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(400).json({ error: "Invalid email" });
+      return res.status(401).json({ error: "Invalid email" });
     }
 
     // check if the password is correct
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: "Credentials not match" });
+      return res.status(401).json({ error: "Credentials not match" });
     }
 
     // create a token
