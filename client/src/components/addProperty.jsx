@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+const util = require("../util");
 
 const theme = createTheme({
   palette: {
@@ -50,6 +51,7 @@ const AddProperty = () => {
   const [error, setError] = React.useState("");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const navigate = require("react-router-dom").useNavigate();
+  const [userRole, setUserRole] = React.useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +72,12 @@ const AddProperty = () => {
   };
 
   useEffect(() => {
+    const role = util.checkUserRole();
+    setUserRole(role);
+    // if (role !== "admin") {
+    //   navigate("/properties");
+    // }
+
     const fetchProperties = async () => {
       if (propertyId) {
         console.log(propertyId);
