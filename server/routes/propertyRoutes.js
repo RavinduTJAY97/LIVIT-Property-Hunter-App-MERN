@@ -1,9 +1,10 @@
 var express = require("express");
 var router = express.Router();
 const Property = require("../database/models/property");
+const { authenticate } = require("../middleware/authenticate");
 
 // add a property
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   try {
     const property = new Property({
       ...req.body, // Destructure all fields from req.body
@@ -22,7 +23,7 @@ router.post("/", async (req, res) => {
 });
 
 // get all properties
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const { page = 1, limit = 4, status, propertyType, search } = req.query;
     const skip = (page - 1) * limit;
@@ -56,7 +57,7 @@ router.get("/", async (req, res) => {
 });
 
 // get property by id
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const property = await Property.findById(req.params.id);
     if (!property) {
@@ -70,7 +71,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // update property
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   try {
     const property = await Property.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -86,7 +87,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // delete property
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const property = await Property.findByIdAndDelete(req.params.id);
     if (!property) {
