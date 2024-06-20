@@ -6,13 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "google-fonts";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import GlobalHelmet from "./components/globalHelmet";
-import SignIn from "./components/login.jsx";
+import SignIn from "./components/Auth/login.jsx";
 import Properties from "./components/properties.jsx";
 import AddProperty from "./components/addProperty.jsx";
 import NotFoundPage from "./components/notFoundPage";
 import PropertyView from "./components/viewProperty";
-import SignUp from "./components/signup";
-import ProtectedRoutes from "./components/protectedRoutes";
+import SignUp from "./components/Auth/signup";
+import ProtectedRoutes from "./components/Auth/protectedRoutes";
 import { HelmetProvider } from "react-helmet-async";
 
 const App = () => {
