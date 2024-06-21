@@ -1,6 +1,11 @@
 // src/util.js
 const { jwtDecode } = require("jwt-decode");
 
+const returnToken = () => {
+  const token = localStorage.getItem("token");
+  return token;
+};
+
 const checkUserRole = () => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -17,4 +22,5 @@ const checkUserRole = () => {
 
 module.exports = {
   checkUserRole,
+  returnToken,
 };
