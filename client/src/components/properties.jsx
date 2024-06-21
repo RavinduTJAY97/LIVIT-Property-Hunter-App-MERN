@@ -20,7 +20,6 @@ const Properties = () => {
   useEffect(() => {
     const role = util.checkUserRole();
     setUserRole(role);
-    console.log(role);
     const handlePropertyTypeChange = (type) => {
       setPropertyType(type);
     };

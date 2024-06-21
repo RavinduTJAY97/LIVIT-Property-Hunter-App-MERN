@@ -22,28 +22,45 @@ const PropertyList = ({ propertyType, status, search }) => {
   const propertiesPerPage = 4;
   const [selectedProperty, setSelectedProperty] = useState(null);
   const navigate = require("react-router-dom").useNavigate();
+  const util = require("../util");
 
   useEffect(() => {
     const fetchProperties = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/property`, {
-          params: {
-            page,
-            limit: propertiesPerPage,
-            propertyType,
-            status,
-            search,
-          },
-        });
-        setProperties(response.data.properties || []);
-        setTotalPages(Math.ceil(response.data.total / propertiesPerPage));
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const token = util.returnToken();
+      if (token) {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            params: {
+              page,
+              limit: propertiesPerPage,
+              propertyType,
+              status,
+              search,
+            },
+          };
+          const response = await axios.get(
+            `http://localhost:8080/property`,
+            config
+          );
+          setProperties(response.data.properties || []);
+          setTotalPages(Math.ceil(response.data.total / propertiesPerPage));
+        } catch (error) {
+          console.error(
+            "Error fetching data:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      } else {
+        console.error("No token found");
       }
     };
 
     fetchProperties();
-  }, [page, propertyType, status, search]);
+  }, [page, propertiesPerPage, propertyType, status, search]);
 
   const handleChange = (event, value) => {
     setPage(value);

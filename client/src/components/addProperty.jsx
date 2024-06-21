@@ -52,6 +52,7 @@ const AddProperty = () => {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const navigate = require("react-router-dom").useNavigate();
   const [userRole, setUserRole] = React.useState("");
+  const [token, setToken] = React.useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,18 +73,33 @@ const AddProperty = () => {
   };
 
   useEffect(() => {
+    const token = util.returnToken();
+    setToken(token);
+
     const role = util.checkUserRole();
     setUserRole(role);
     if (role !== "admin") {
       navigate("/properties");
     }
 
-    const fetchProperties = async () => {
-      if (propertyId) {
-        console.log(propertyId);
+    // fetch property data
+    fetchProperty();
+  }, [propertyId, userRole, navigate]);
+
+  const fetchProperty = async () => {
+    if (propertyId) {
+      const accessToken = token;
+      if (accessToken) {
         try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          };
           const response = await axios.get(
-            `http://localhost:8080/property/${propertyId}`
+            `http://localhost:8080/property/${propertyId}`,
+            config
           );
           setFormValues(response.data || {});
           setPropertyType(response.data.propertyType);
@@ -92,14 +108,11 @@ const AddProperty = () => {
           console.error("Error fetching data:", error);
         }
       }
-    };
-
-    fetchProperties();
-  }, [propertyId]);
-
+    }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    const accessToken = token;
     const errors = [];
 
     switch (true) {
@@ -146,28 +159,48 @@ const AddProperty = () => {
     };
 
     if (propertyId) {
-      try {
-        await axios.put(`http://localhost:8080/property/${propertyId}`, data);
-        setOpenSnackbar(true);
-        setError("Property updated successfully!");
-        setTimeout(() => {
-          navigate("/properties");
-        }, 1000);
-      } catch (error) {
-        setError("An error occurred");
-        setOpenSnackbar(true);
+      if (accessToken) {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          };
+          await axios.put(
+            `http://localhost:8080/property/${propertyId}`,
+            data,
+            config
+          );
+          setOpenSnackbar(true);
+          setError("Property updated successfully!");
+          setTimeout(() => {
+            navigate("/properties");
+          }, 1000);
+        } catch (error) {
+          setError("An error occurred");
+          setOpenSnackbar(true);
+        }
       }
     } else {
-      try {
-        await axios.post("http://localhost:8080/property", data);
-        setOpenSnackbar(true);
-        setError("Property added successfully!");
-        setTimeout(() => {
-          navigate("/properties");
-        }, 1000);
-      } catch (error) {
-        setError("An error occurred");
-        setOpenSnackbar(true);
+      if (accessToken) {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          };
+          await axios.post("http://localhost:8080/property", data, config);
+          setOpenSnackbar(true);
+          setError("Property added successfully!");
+          setTimeout(() => {
+            navigate("/properties");
+          }, 1000);
+        } catch (error) {
+          setError("An error occurred");
+          setOpenSnackbar(true);
+        }
       }
 
       setOpenSnackbar(true);
