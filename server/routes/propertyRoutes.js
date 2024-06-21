@@ -1,10 +1,10 @@
 var express = require("express");
 var router = express.Router();
 const Property = require("../database/models/property");
-const { authenticate } = require("../middleware/authenticate");
+const { authenticate, authorize } = require("../middleware/authenticate");
 
 // add a property
-router.post("/", authenticate, async (req, res) => {
+router.post("/", authenticate, authorize("admin"), async (req, res) => {
   try {
     const property = new Property({
       ...req.body, // Destructure all fields from req.body
@@ -71,7 +71,7 @@ router.get("/:id", authenticate, async (req, res) => {
 });
 
 // update property
-router.put("/:id", authenticate, async (req, res) => {
+router.put("/:id", authenticate, authorize("admin"), async (req, res) => {
   try {
     const property = await Property.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -87,7 +87,7 @@ router.put("/:id", authenticate, async (req, res) => {
 });
 
 // delete property
-router.delete("/:id", authenticate, async (req, res) => {
+router.delete("/:id", authenticate, authorize("admin"), async (req, res) => {
   try {
     const property = await Property.findByIdAndDelete(req.params.id);
     if (!property) {
