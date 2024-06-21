@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Logout from "./Auth/logout";
 import {
   Container,
   Card,
@@ -240,6 +241,9 @@ const PropertyCard = () => {
           </Snackbar>
         </Card>
       </Container>
+      <Box mr={4} mb={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Logout />
+      </Box>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import EventEmitter from "eventemitter3";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import Logout from "./Auth/logout";
 
 const emitter = new EventEmitter();
 
@@ -68,6 +69,9 @@ const Properties = () => {
             />
           </Grid>
         </Grid>
+      </Box>
+      <Box mr={4} mb={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Logout />
       </Box>
     </div>
   );

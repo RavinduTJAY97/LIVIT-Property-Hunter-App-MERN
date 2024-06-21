@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Logout from "./Auth/logout";
 import {
   TextField,
   Button,
@@ -422,6 +423,10 @@ const AddProperty = () => {
           </Alert>
         </Snackbar>
       </Container>
+
+      <Box mr={4} mb={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Logout />
+      </Box>
     </ThemeProvider>
   );
 };
