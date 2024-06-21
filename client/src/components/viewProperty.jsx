@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Logout from "./Auth/logout";
 import {
   Container,
   Card,
@@ -23,6 +24,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+const util = require("../util");
 
 const PropertyCard = () => {
   const [property, setProperty] = useState({});
@@ -31,16 +33,31 @@ const PropertyCard = () => {
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
+    const token = util.returnToken();
+    setToken(token);
+    const role = util.checkUserRole();
+    setUserRole(role);
     const fetchProperties = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/property/${propertyId}`
-        );
-        setProperty(response.data || {});
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (token) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        };
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/property/${propertyId}`,
+            config
+          );
+          setProperty(response.data || {});
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
 
@@ -56,18 +73,29 @@ const PropertyCard = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:8080/property/${propertyId}`);
-      handleClose();
-      setOpenSnackbar(true);
-      setError("Property deleted successfully!");
-      setTimeout(() => {
-        navigate("/properties");
-      }, 1000);
-    } catch (error) {
-      console.error("Error deleting property:", error);
-      setOpenSnackbar(true);
-      setError("Error deleting property!");
+    if (token) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        await axios.delete(
+          `http://localhost:8080/property/${propertyId}`,
+          config
+        );
+        handleClose();
+        setOpenSnackbar(true);
+        setError("Property deleted successfully!");
+        setTimeout(() => {
+          navigate("/properties");
+        }, 1000);
+      } catch (error) {
+        console.error("Error deleting property:", error);
+        setOpenSnackbar(true);
+        setError("Error deleting property!");
+      }
     }
   };
 
@@ -155,24 +183,26 @@ const PropertyCard = () => {
               {property.contact}
             </Typography>
 
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <Button
-                variant="outlined"
-                color="success"
-                sx={{ mr: 1 }}
-                onClick={handleEdit}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ mr: 1 }}
-                onClick={handleClickOpen}
-              >
-                Delete
-              </Button>
-            </Box>
+            {userRole === "admin" && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{ mr: 1 }}
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ mr: 1 }}
+                  onClick={handleClickOpen}
+                >
+                  Delete
+                </Button>
+              </Box>
+            )}
           </CardContent>
           <Dialog
             open={open}
@@ -211,6 +241,9 @@ const PropertyCard = () => {
           </Snackbar>
         </Card>
       </Container>
+      <Box mr={4} mb={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Logout />
+      </Box>
     </div>
   );
 };
