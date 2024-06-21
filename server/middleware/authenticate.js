@@ -11,7 +11,6 @@ const authenticate = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("decoded", decoded);
     const user = await User.findOne({ _id: decoded._id });
 
     if (!user) {
@@ -24,4 +23,14 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticate };
+const authorize = (role) => {
+  return (req, res, next) => {
+    if (req.user && req.user.role === role) {
+      next();
+    } else {
+      res.status(403).json({ message: "Access denied" });
+    }
+  };
+};
+
+module.exports = { authenticate, authorize };
